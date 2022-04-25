@@ -1,0 +1,1320 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Product List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+</head>
+
+<body>
+    <style>
+        @font-face {
+            font-family: 'proxima_nova_rgregular';
+            src: url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.eot');
+            src: url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.eot?#iefix') format('embedded-opentype'),
+                url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.woff') format('woff'),
+                url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.ttf') format('truetype'),
+                url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.svg#proxima_nova_rgregular') format('svg');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'proxima_nova_rgregular', Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            padding: 0;
+            margin-left: 2px;
+            box-sizing: border-box;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #385072 !important;
+            color: white;
+        }
+
+        .select2-container--default .select2-results>.select2-results__options {
+            max-height: 250px;
+            height: 250px;
+            top: 0%;
+            top: 0;
+        }
+
+        #select2-games-container.select2-selection__rendered {
+            margin-left: 2px;
+            font-size: 12px;
+            box-sizing: border-box;
+        }
+
+        #select2-country-container.select2-selection__rendered {
+            margin-left: 2px;
+            font-size: 12px;
+            box-sizing: border-box;
+        }
+
+        .select2-selection--multiple {
+            overflow: hidden !important;
+            height: auto !important;
+        }
+
+        .select2-choices {
+            min-height: 250px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        h5 {
+            font-family: Tahoma;
+        }
+
+        h6 {
+            color: black;
+            font-weight: bold;
+            margin-bottom: 0px;
+            padding-left: 2px;
+        }
+
+        .input-field {
+            width: 95%;
+            max-width: 95%;
+            font-size: 12px;
+            padding-left: 10px;
+            margin-left: 3px;
+            border-radius: 2px;
+            border-width: 1px;
+            /* box-shadow: 5px 10px #888888; */
+            /* border: #000000; */
+            border-color: #a1a1a1;
+            display: inline-flexbox;
+            height: 25px;
+        }
+
+        .invalid-placeholder {
+            background-color: #fcddcb;
+            columns: white;
+        }
+
+        ::-webkit-input-placeholder {
+            /* Edge */
+            color: rgb(68, 67, 67);
+            font-size: 12px;
+        }
+
+        :-ms-input-placeholder {
+            /* Internet Explorer 10-11 */
+            color: rgb(68, 67, 67);
+            font-size: 12px;
+        }
+
+        ::placeholder {
+            color: rgb(68, 67, 67);
+            font-size: 12px;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .select-css {
+            max-width: 70%;
+        }
+
+
+        form {
+            width: 300px;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .value-button {
+            display: inline-block;
+            border: 1px solid #ddd;
+            margin: 0px;
+            width: 40px;
+            height: 20px;
+            text-align: center;
+            vertical-align: middle;
+            padding: 11px 0;
+            background: #eee;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .value-button:hover {
+            cursor: pointer;
+        }
+
+        form #decrease {
+            margin-right: -4px;
+            border-radius: 8px 0 0 8px;
+        }
+
+        form #increase {
+            margin-left: -4px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        form #input-wrap {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        input#number {
+            text-align: center;
+            border: none;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            margin: 0px;
+            width: 15%;
+            max-width: 20%;
+            height: 40px;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: left;
+            position: relative;
+            width: 300px;
+        }
+
+        .cart-header h4 {
+            text-align: left;
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .cart-header input {
+            position: absolute;
+            right: 0;
+            margin-top: 0px;
+        }
+
+        .glyphicon {
+            float: right;
+            margin-left: 3px;
+            cursor: pointer;
+        }
+
+        .quantity-input {
+            width: 3%;
+            position: absolute;
+            margin-bottom: 2px;
+            height: 20px;
+        }
+
+        .demo-wrap {
+            position: relative;
+            height: 100vh;
+        }
+
+        .demo-wrap:before {
+            content: ' ';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            /* background: url("https://cdn.yellowmessenger.com/J8kENYr7XAWL1620791192314.jpg"); */
+            /* background-repeat: no-repeat;
+            background-position: 50% 0;
+            background-size: cover; */
+        }
+
+        .demo-content {
+            position: relative;
+        }
+
+        #submit-button {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        var language = "ms"
+        window.addEventListener('load', (event) => {
+            console.log('page is fully loaded');
+            let { lang, status } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+            language = lang
+            document.getElementById("title").innerHTML = language == "ms" ? "Sila isi butiran berikut untuk menghubungkan anda dengan pasukan Sokongan Pelanggan kami 😊" : "Please fill in the following details to connect you to our Customer Support team 😊"
+            document.getElementById("name-header").innerHTML = language == "ms" ? "Nama" : "Name"
+            document.getElementById("email-header").innerHTML = language == "ms" ? "Email" : "Email"
+            document.getElementById("submit-button").value = language == "ms" ? "Teruskan" : "Continue"
+
+           // document.getElementById("phone-header").innerHTML = language == "id" ? "Nomor Handphone" : "Mobile Number"
+            //document.getElementById("payment-header").innerHTML = language == "id" ? "Saluran pembarayan" : "Payment Channel"
+            //document.getElementById("game-header").innerHTML = language == "id" ? "Produk/Game" : "Product/Game"
+            document.getElementById("name").placeholder = language == "ms" ? "Sila masukkan nama anda" : "Please enter your name"
+            document.getElementById("email").placeholder = language == "ms" ? "Sila masukkan emel anda" : "Please enter your email"
+            //document.getElementById("phone").placeholder = language == "id" ? "Silakan Masukkan No.Handphone Anda" : "Please enter your mobile number"
+            //document.getElementById("product-option").innerHTML = language == "id" ? "Pilih Saluran pembarayan yang Anda inginkan" : "Please select your payment channel"
+            //document.getElementById("game-option").innerHTML = language == "id" ? "Silakan pilih produk/game nya" : "Please select your game/product"
+            // if (status == "offline") {
+            //     const message = document.createElement("h6")
+            //     message.innerHTML = language == "id" ? "Pesan" : "Message"
+            //     message.id = "message-header"
+            //     document.getElementById("offline-message").appendChild(message)
+            //     const messageBox = document.createElement("textarea")
+            //     // messageBox.placeholder = language == "id" ? "message" : "message"
+            //     messageBox.type = "text"
+            //     messageBox.id = "user-message"
+            //     messageBox.name = "message"
+            //     // messageBox.onchange = messageHandler()
+            //     messageBox.classList.add("input-field")
+            //     messageBox.style.height = "50px"
+            //     document.getElementById("offline-message").appendChild(messageBox)
+            //     // messageBox.setAttribute("oninput", messageHandler());
+            //     const attachment = document.createElement("h6")
+            //     attachment.innerHTML = language == "id" ? "Lampiran" : "Attachment"
+            //     attachment.id = "attachment-header"
+            //     document.getElementById("offline-message").appendChild(attachment)
+            //     const attachmentInput = document.createElement("input")
+            //     attachmentInput.type = "file"
+            //     attachmentInput.classList.add("form-control")
+            //     attachmentInput.classList.add("input-field")
+            //     attachmentInput.style.height = "30px"
+            //     attachmentInput.id = "read-file"
+            //     // attachmentInput.onchange = "fileUpload()"
+            //     document.getElementById("offline-message").appendChild(attachmentInput)
+            // }
+            // console.log(language)
+        });
+
+        //    Document upload - Start
+        // function fileValue(value) {
+        //     var path = value.value;
+        //     var extenstion = path.split('.').pop();
+        //     if (extenstion == "jpg" || extenstion == "svg" || extenstion == "jpeg" || extenstion == "png" || extenstion == "gif") {
+        //         document.getElementById('image-preview').src = window.URL.createObjectURL(value.files[0]);
+        //         var filename = path.replace(/^.*[\\\/]/, '').split('.').slice(0, -1).join('.');
+        //         document.getElementById("filename").innerHTML = filename;
+        //     } else {
+        //         alert("File not supported. Kindly Upload the Image of below given extension ")
+        //     }
+        // }
+        // function fileUpload() {
+        //     // no file selected to read
+        //     console.log("File uploaded")
+        //     var file = document.querySelector("#read-file").files[0];
+        //     console.log(file)
+
+        //     var reader = new FileReader();
+        //     reader.onload = function (e) {
+        //         // binary data
+        //         console.log(e.target.result);
+        //     };
+        //     reader.onerror = function (e) {
+        //         // error occurred
+        //         console.log('Error : ' + e.type);
+        //     };
+        //     reader.readAsBinaryString(file);
+        // };
+        // Document upload - End
+
+        var totalSelection = []
+        var count = 0
+        var countrys = {
+            "Indonesia": ["Telkomsel",
+"Indosat",
+"DANA",
+"GoPay",
+"Shopee-Pay",
+"Bank Transfer",
+"OVO",
+"Tri Indonesia",
+"XL",
+"Alfamart",
+"Smartfren",
+"Indomaret",
+"Kartu Kredit",
+"LinkAja",
+"Kredivo",
+"DOKU Wallet",
+"True Money Agent Network"]
+        }
+
+        $(document).ready(function () {
+            var gamesArray = ['Higgs Domino','8 Ball Legend','Mobile Legends Bang Bang',
+'Free Fire',
+'Voucher Steam Wallet',
+'Zepeto',
+'Voucher Garena Shell',
+'Voucher Google Play Gift Code',
+'Genshin Impact',
+'PUBG Mobile',
+'Domino Gaple QiuQiu Boyaa（Capsa susun)',
+'Arena Of Valor',
+'Astral Guardian',
+'Valorant',
+'League Of Legends - Wild Rift',
+'Legends Of Runterra',
+'Tinder Direct Top Up',
+'Tinder Voucher',
+'Bigo',
+'Hago',
+'Dreame',
+'Boomlive',
+'Naver Z Corp',
+'4399',
+                              '8 Ball Pool',
+'8Elements',
+'Ace Poker',
+'Afk Arena',
+'Afk Legends',
+'Age Of Rome',
+'Aha 2',
+'Alchemy Stars',
+'Amor Amis',
+'Angry Bee',
+'Aptoide',
+'Arena Capsa Susun',
+'Asphalt 9',
+'Au-Superstar',
+'Audistar Mobile',
+'Auto Chess',
+'Avatar Musik',
+'Avatar World',
+'Azur Lane',
+'Badlanders',
+'Badoo',
+'Bagelcode',
+'Barbarq',
+'Basketrio',
+'Bat Messenger',
+'Be The King',
+'Beasts Evolved R2',
+'Beelive',
+'Bein Web',
+'Berita Saku',
+'Best Of King',
+'Bf Games',
+'Big Win Domino99',
+'Bills Domino Club',
+'Bingo',
+'Biugo',
+'Blade of Queen',
+'Bleach Mobile 3D',
+'Blink',
+'Bliss-Lite',
+'Blockman Go',
+'Bloomer',
+'Bluepotion',
+'Bluestacks',
+'Bongo Live',
+'Borderlands 3',
+'Bullet Angel',
+'Cabaca',
+'Caesar Poker',
+'Call Of Duty Mobile',
+'Candy Crush Saga',
+'Capsun',
+'Cardboard Clash',
+'Cave Shooter',
+'Ceri Live',
+'Champion Of The Fields',
+'Chaos Crisis',
+'Chatlive',
+'Cherry Credits Game',
+'Chess Rush',
+'City Of Desire',
+'Civilization VI',
+'Cliponyu',
+'Cloud Song',
+'Cmge',
+'Cocofun',
+'Contra Return',
+'Cooking Battle',
+'Coowry',
+'Counter Side',
+'Crisis Action',
+'CrossFire Legend',
+'Crossing Void',
+'Crusaders Of Light',
+'Crystal Tarot',
+'Cube',
+'Cyber Hunter',
+'Cynking Domino',
+'Cynking Gaple',
+'Dark Nemesis',
+'Date A Live',
+'Dc Worlds Collide',
+'Deity Arena',
+'Delight Information',
+'Devil Hunter',
+'Diamond Sing',
+'Dian Dian Le',
+'Disorder',
+'Divine Realm',
+'Dkm Game',
+'Domino Gaple',
+'Domino Qiuqiu Gaple',
+'Doojin',
+'Dorfish',
+'Dragon Boy',
+'Dragon Brawlers',
+'Dragon Raja',
+'Dragonnest',
+'Drift Tycoon',
+'Dutopay',
+'Dynasty Heroes',
+'Easysleep',
+'Echat',
+'Eclipse Isle',
+'Edifikasi',
+'Eear',
+'Efun',
+'Efunfun',
+'Electronic Arts',
+'Electronic Soul',
+'Elsa',
+'Enjoy Fun',
+'Enjoy Game',
+'Epl Manager',
+'Era Of Celestials',
+'Eternal Legends M',
+'Evo Games',
+'Face Poker',
+'Fancyu',
+'Fantasy Westward Journey',
+'Fantasyblade',
+'Fashion Dream',
+'Fashion Fantasy',
+'Final Impact',
+'Fincon',
+'Findu Pro',
+'Firefly Live',
+'Fishing Game',
+'Fishing Hall',
+'Fishing Master',
+'Fishing Rocket',
+'Fishingfun',
+'Flash Party',
+'Fleksy',
+'Fly Ff',
+'Food Fantasy',
+'Football Master',
+'Fulive',
+'Fun Pay',
+'Funmela',
+'Funpax',
+'Funplay',
+'Gaea Mobile',
+'Gaga',
+'Game Dreamer',
+'Game Of Sultan',
+'Game Sky',
+'Game Spark',
+'Game View',
+'Gamo',
+'Gash',
+'Gate Games',
+'Girls x Battle',
+'Girls x Battle 2',
+'Go Game',
+'Goaloo',
+'Goddess Mua',
+'Goddess Of Genesis',
+'Gogo Live',
+'Gold Storm Casino',
+'Golden Island Casino',
+'Grampus',
+'Grand Theft Auto V',
+'Great Sailing Media',
+'Gumi',
+'Guns Of Glory',
+'Gunship Battle Total Warfare','Guvera',
+'Hacker',
+'Haijing Network',
+'Haku',
+'Halo Digital',
+'Happy Hour',
+'Happy Poker',
+'Harian Topskor',
+'Hasama',
+'Hay Day',
+'Healthme',
+'Heat Up',
+'Hello Yo',
+'Hellow',
+'Hero Evolved',
+'Hero Rush',
+'Heroes Online',
+'Hexa Block',
+'Heyyogame',
+'Hi Poker 3D',
+'Higame',
+'Higo',
+'Hinow',
+'Hk Xinmo',
+'Hoda',
+'Hoki1000',
+'Honkai Impact 3',
+'Hoolai',
+'Hormones',
+'Huawei',
+'Hugme',
+'Huowu',
+'Identity V',
+'Idgameland',
+'Idle Dungeon Rpg: Dia',
+'Idle Gog',
+'Idle Investor Tycoon',
+'Idle Legends',
+'Idol Party',
+'Iiugame',
+'Immortal King',
+'Immortal Taoists',
+'Imo',
+'Imperial Palace',
+'Indoplay',
+'Iqiyi',
+'Iqoo',
+'Ireader',
+'Isentric',
+'Island King',
+'Ist Media',
+'Jackpot Fishing 2',
+'Jinkejoy',
+'Jodo',
+'Jogamejo',
+'Joox',
+'Josudo',
+'Joy',
+'Joyspade',
+'Joytojoy',
+'Junhai',
+'Kaya',
+'King Ace',
+'Kingdom Craft',
+'Kingsoft',
+'Kito Live',
+'Kitty Live',
+'Kk Live',
+'Knight Age',
+'Kof Allstar - Final Battle',
+'Kris Destiny',
+'Kunshan Muzimu',
+'Lamour',
+'Land Of Doran',
+'Langrisser',
+'Laplace M',
+'Last Empire War Z',
+'Lbe',
+'League Of Three Kingdoms',
+'Legacy Of Discord',
+'Legend Of Neverland',
+'Life After',
+'Light Chat',
+'Light Of Thel',
+'Likee',
+'Linekong',
+'Litmatch',
+'Liu Li',
+'Live.Me',
+'Locku',
+'Long Wan',
+'Longyou',
+'Lords Mobile: Kingdom Wars',
+'Love 3 Kingdoms',
+'Love Nikki',
+'Love Story',
+'Lovemeet-Video',
+'Lucky Mojo-Daily Fortune',
+'Ludo Domino Gaple Qiuqiu',
+'Luminary',
+'Luna',
+'Luxy Domino',
+'Luxy Poker',
+'M-Reader',
+'Mabes',
+'Mahjong Soul',
+'Maingame',
+'Mancing Ikan',
+'Manga Clash',
+'Manganuts',
+'Mango Live',
+'Mars Network',
+'Marvel Duel',
+'Marvel Strike Force',
+'Marvel Super War',
+'Master Of Mainland',
+'Meegoo',
+'Megaxus Mi-Cash Voucher',
+'Memoriki',
+'Meogirl Advanture',
+'Meyo',
+'Mico',
+'Migo',
+'Minecraft Vouchers',
+'Miniclip',
+'Miniworld',
+'Miracle M',
+'Mivo',
+'Mobgame',
+'Mobiarmy',
+'Mobile Legends Adventure',
+'Mobiprima',
+'Mobstudio',
+'Modern Combat 5',
+'Moegirl Go',
+'Molekmedia',
+'Moni',
+'Monster Gotcha',
+'Monster Pvp',
+'Mr Love: Dream Date',
+'Mu Origin 2',
+'Mu Strongest',
+'Mvp Domino',
+'My Show',
+'My Turn',
+'Mydio Sing',
+'Naruto Slugfest',
+'Nba2K21 Steam',
+'Need For Speed',
+'Nesiaplay Poker',
+'Neverland Era',
+'Ngames',
+'Nimo Tv',
+'Ninja Girls',
+'Ninja Online',
+'Ninja School World',
+'Nj Interactive',
+'Nonolive',
+'Oasis Games',
+'Ocean Arena',
+'Ocean King',
+'Offgamers',
+'Ola Chat',
+'Omega Legends',
+'Omlet Arcade',
+'Omoplay',
+'One Piece: Kings Voyage',
+'One Punch Man',
+'Onemt',
+'Online Soccer Manager',
+'Onmyoji Arena',
+'Onsof',
+'Oomph',
+'Op Legend',
+'Oppo',
+'Orange Game',
+'Orangenat',
+'Origin Of Dynasty: Three',
+'Pago',
+'Pak Dok',
+'Palfish Reading',
+'Palmplay Capsun',
+'Palmplay Domino',
+'Palmplay Fishing',
+'Payletter',
+'Payment Wall',
+'Paynicorn',
+'Payssion',
+'Peach Atlas',
+'Perfect World Vng: Fly With Me',
+'Pic Art',
+'Piggy Boom',
+'Pik Pik',
+'Pirates Of The Caribbean : Tow',
+'Planet Nine',
+'Pocket Books',
+'Pocket Hospital',
+'Pocket Limited',
+'Pocket Network',
+'Point Blank',
+'Pokaa',
+'Poker Td',
+'Popchat',
+'Pp Game',
+'Prodigy',
+'Prosperita',
+'Pt. Cerdas Digital',
+'Ptwing',
+'PUBG Lite',
+'Qbaca',
+'Qianbo Tech',
+'Quhu',
+'Quick Sdk',
+'Rabbit Technology',
+'Rabo Live',
+'Rage Of Dragons',
+'Ragnarok M',
+'Ragnarok X',
+'Rainbow Story',
+'Raja Kartu',
+'Red Dead Redemption 2',
+'Revivo',
+'Richer Slots Casino',
+'Ride Out Heroes',
+'Riley',
+'Ring Of Wyvern',
+'Rise Of Dragon',
+'Rise Of Empires',
+'Rise Of Kingdoms',
+'Roseland',
+'Royale Domino',
+'Ruixun Technology',
+'Rules Of Survival',
+'Rules Of Survival (Pc)',
+'Safari Area Top Trainer',
+'Saint Seiya',
+'Sakti Mobile',
+'Samkok SLG',
+'Samurai Era Rise Of Empires',
+'Sausage Man',
+'Scroll Of Onmyoji',
+'Secret Flower',
+'Seeku',
+'Seeya',
+'Sexy Three Kingdoms',
+'Shan Koe Mee',
+'Shanghai Piaoran',
+'Shareit',
+'Shellfire',
+'Shengda',
+'Shiyin',
+'Sim Digital',
+'Sky Castle',
+'Slot',
+'Snail Game',
+'Social App',
+'Soft World',
+'Sohoo',
+'Son Goku',
+'Spark',
+'Speed Drifters',
+'Spirit Land',
+'Spring Game',
+'Sprite Fantasia',
+'Starmaker',
+'Storial',
+'Storm Arena',
+'Strikeg',
+'Sugar Live',
+'Summer Pop: Magical Adventure',
+'Super Evolution Institute',
+'Super Mecha Champions',
+'Supergirl',
+'Superlinkin',
+'Survival Heroes',
+'Sweet Ring',
+'Sword And Magic',
+'Sword Of Angels',
+'Tado',
+'Talent Walker',
+'Tales Of Dragon',
+'Tales Of Knight',
+'Talisman Om',
+'Talkee',
+'Tamtay',
+'Tantan',
+'Tapfun',
+'Teamtop Game',
+'Tears Of Themis',
+'Tg',
+'The Lord of the Rings: Rise to War',
+'The Outer Worlds',
+'The Pirate War',
+'The War Of Genesis: Battle Of Antaria',
+'Tippin.Tv',
+'Tips Pro',
+'Tom and Jerry',
+'Top Eleven',
+'Topfun Domino Gaple',
+'Tourhq',
+'Tribe',
+'Ttchat',
+'Turbo VPN',
+'Tuyoo',
+'Twitchy Finger',
+'Twoo',
+'Tycoon Yogrt',
+'Uloveplay Poker Go',
+'Uloveplay Poker Time',
+'Ulugame',
+'Ume',
+'Uniugame',
+'Unlock Game',
+'Unopay',
+'Up Live',
+'Ushow Media',
+'Vagary',
+'Vidchat',
+'Vigoo Game',
+'Vinedu',
+'Virtual Store',
+'Vision+',
+'Viu',
+'Vivaus',
+'Vivo',
+'Viwawa',
+'Voov',
+'Vshow',
+'Waka Live',
+'War Of Rings',
+'We Comics',
+'We Sing',
+'We Tv',
+'Webnovel',
+'Webzen',
+'Wefun',
+'Wekara',
+'Werewolf',
+'Wink',
+'Winner Interactive',
+'World Of Dragon Nest',
+'World War Heroes',
+'X Hero',
+'Xforce Online',
+'Xiaomi',
+'Xin Dong',
+'Xin Star',
+'Xsolla',
+'Yepop',
+'Yepplay',
+'Yesme Id',
+'Ygame',
+'Yi Le',
+'Yome Live',
+'Yotta Games',
+'Yoyo',
+'Yubo Live',
+'Yue Game',
+'Yulgang Mobile',
+'Zeemi.Tv',
+'Zhongheng',
+'Zhu Shen',
+'Zhuo Sheng',
+'Zingplay',
+'Zleplay Tech',
+'Zombie Rocket',
+'Zq Games',
+'Zulong',
+'Zuzu Rooms',
+'Bein Vouchers',
+'Black Desert Remastered Voucher',
+'Blizzard Voucher',
+'Fifa Points Voucher',
+'Gemscool Voucher',
+'Goplay Vouchers',
+'MeetU',
+'Milo',
+'Nintendo Voucher',
+'Ok Cupid Voucher',
+'PSN Voucher',
+'PUBG Mobile UC Voucher',
+'Roblox',
+'Spotify Premium Voucher',
+'Vidio Voucher',
+'Viu Voucher',
+'Wetv Voucher',
+'World Of Warships',
+'Xbox Voucher'];
+            var countriesArray = ["Indonesia"]
+            $('#games').select2({
+                data: gamesArray
+            });
+
+            $('#country').select2({
+                data: ["Telkomsel",
+"Indosat",
+"DANA",
+"GoPay",
+"Shopee-Pay",
+"Bank Transfer",
+"OVO",
+"Tri Indonesia",
+"XL",
+"Alfamart",
+"Smartfren",
+"Indomaret",
+"Kartu Kredit",
+"LinkAja",
+"Kredivo",
+"DOKU Wallet",
+"True Money Agent Network"]
+            })
+        });
+
+        function back() {
+            window.parent.postMessage(
+                JSON.stringify({
+                    event_code: "ym-client-event",
+                    data: "@go-back"
+                }),
+                "*"
+            );
+        }
+
+        function nameHandler() {
+            const name = document.getElementById("name")
+            if (document.getElementById("name").value.length == 0) {
+                name.classList.add('invalid-placeholder');
+                document.getElementById("invalid-message").innerHTML = language == "id" ? "Nama wajib diisi untuk terhubung ke Agen Kami!" : "Name is required to connect an agent!"
+            }
+            else {
+                name.classList.remove("invalid-placeholder");
+                document.getElementById("invalid-message").innerHTML = ""
+            }
+        }
+
+        function emailHandler() {
+            const email = document.getElementById("email")
+            if (document.getElementById("email").value.length == 0) {
+                email.classList.add('invalid-placeholder');
+                document.getElementById("invalid-message").innerHTML = language == "id" ? "Email wajib diisi untuk terhubung ke Agen Kami!" : "Email is required to connect an agent!"
+            }
+            else {
+                email.classList.remove("invalid-placeholder");
+                document.getElementById("invalid-message").innerHTML = ""
+            }
+        }
+
+        // function phoneHandler() {
+        //     const phone = document.getElementById("phone")
+        //     if (document.getElementById("phone").value.length == 0) {
+        //         phone.classList.add('invalid-placeholder');
+        //         document.getElementById("invalid-message").innerHTML = language == "id" ? "No.Telepon wajib diisi untuk terhubung ke Agen Kami!" : "Phone number is required to connect an agent!"
+        //     }
+        //     else {
+        //         phone.classList.remove("invalid-placeholder");
+        //         document.getElementById("invalid-message").innerHTML = ""
+        //     }
+        // }
+
+        // function messageHandler() {
+        //     console.log("came into message handler")
+        //     const message = document.getElementById("user-message")
+        //     if (message.value.length == 0) {
+        //         // message.classList.add('invalid-placeholder');
+        //         document.getElementById("invalid-message").innerHTML = language == "id" ? "" : "A message should be sent to connect to an agent"
+        //     }
+        //     else {
+        //         // message.classList.remove("invalid-placeholder");
+        //         document.getElementById("invalid-message").innerHTML = ""
+        //     }
+        // }
+
+        function submit() {
+            const emailRegex = /[A-Za-z\d]+([-._+]?[A-Za-z\d]+)*@[A-Za-z\d]+(-?[A-Za-z\d])*([.][A-Za-z\d]{2,})+/gi
+            var data = {
+                "name": document.getElementById("name").value,
+                "email": document.getElementById("email").value,
+                // "payment-type": document.getElementById("country").value,
+                // "games": document.getElementById("games").value,
+                // "phone": document.getElementById("phone").value,
+            }
+            if (document.getElementById("user-message")) {
+                data.message = document.getElementById("user-message").value
+            }
+            const name = document.getElementById("name")
+            const email = document.getElementById("email")
+            // const phone = document.getElementById("phone")
+            // const country = document.getElementById("country")
+            // const games = document.getElementById("games")
+            const message = document.getElementById("user-message")
+            const submit = document.getElementById("submit-button")
+            // console.log(message.value, "Message value after submitting")
+            if (data.email.length == 0 || data.name.length == 0 || !emailRegex.test(data.email)) {
+                if (data.name.length == 0) {
+                    document.getElementById("invalid-message").innerHTML = language == "ms" ? "Nama diperlukan untuk menghubungkan ejen!" : "Name is required to connect an agent!"
+                    name.placeholder = language == "ms" ? 'Nama diperlukan untuk menghubungkan ejen!' : "Name is required to connect an agent"
+                    name.classList.add('invalid-placeholder');
+                    email.classList.remove("invalid-placeholder");
+                    phone.classList.remove("invalid-placeholder")
+                    message.classList.remove("invalid-placeholder")
+                    name.focus();
+                }
+                else if (data.email.length == 0) {
+                    document.getElementById("invalid-message").innerHTML = language == "ms" ? "Emel diperlukan untuk menghubungkan ejen!" : "Email is required to connect an agent!"
+                    email.placeholder = language == "ms" ? 'Emel diperlukan untuk menghubungkan ejen!' : "Email is required to connect an agent"
+                    email.classList.add('invalid-placeholder');
+                    name.classList.remove("invalid-placeholder");
+                    phone.classList.remove("invalid-placeholder")
+                    message.classList.remove("invalid-placeholder")
+                    email.focus();
+                }
+                else if (!emailRegex.test(data.email)) {
+                    document.getElementById("invalid-message").innerHTML = language == "ms" ? "E-mel yang sah diperlukan untuk menghubungkan ejen" : "Valid email is required to connect an agent"
+                    email.placeholder = language == "ms" ? 'E-mel yang sah diperlukan untuk menghubungkan ejen' : "Valid email is required to connect an agent"
+                    name.classList.remove("invalid-placeholder");
+                    phone.classList.remove("invalid-placeholder")
+                    message.classList.remove("invalid-placeholder")
+                    email.focus();
+                }
+
+                // else if(data.message.length == 0 ) {    //Added
+                //     document.getElementById("invalid-message").innerHTML = language == "id" ? "Silakan masukan pesan untuk menyelesaikan form " : "A message should be sent to connect to an agent"
+                //     message.placeholder = language == "id" ? 'Silakan masukan pesan untuk menyelesaikan form ' : "A message should be sent to connect to an agent"
+                //     name.classList.add('invalid-placeholder');
+                //     email.classList.remove("invalid-placeholder");
+                //     phone.classList.remove("invalid-placeholder")
+                //     message.classList.remove("invalid-placeholder")
+                //     message.focus();
+                // }
+                // else if (data.phone.length == 0) {
+                //     document.getElementById("invalid-message").innerHTML = language == "id" ? "No.Telepon wajib diisi untuk terhubung ke Agen Kami!" : "Phone number is required to connect an agent!"
+                //     phone.placeholder = language == "id" ? 'No.Telepon wajib diisi untuk terhubung ke Agen Kami' : "Phone number is required to connect an agent"
+                //     phone.classList.add('invalid-placeholder');
+                //     name.classList.remove("invalid-placeholder");
+                //     email.classList.remove("invalid-placeholder")
+                //     message.classList.remove("invalid-placeholder")
+                //     phone.focus();
+                // }
+                // else if (message.value == "") {
+                //     document.getElementById("invalid-message").innerHTML = language == "id" ? "No.Telepon wajib diisi untuk terhubung ke Agen Kami!" : "Phone number is required to connect an agent!"
+                //     // me.placeholder = language == "id" ? 'No.Telepon wajib diisi untuk terhubung ke Agen Kami' : "Phone number is required to connect an agent"
+                //     phone.classList.remove('invalid-placeholder');
+                //     name.classList.remove("invalid-placeholder");
+                //     email.classList.remove("invalid-placeholder")
+                //     message.classList.add('invalid-placeholder');
+                //     message.focus();
+                // }
+                console.log("Empty/Invalid values are present in the form ")
+            }
+            else {
+                try {
+                    var file = document.querySelector("#read-file").files[0];
+                    console.log("File value", file)
+                    if (file != undefined) {
+                        const fileBlob = new Blob([file], { type: 'audio/m4u' })
+                        console.log("File uploaded", fileBlob.toString().length)
+                        let { env } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+                        let authorization = env == "sandbox" ? "Bearer aba1bc0c9163ffb006ffc2f24779f812fbc9294c224785ede2a899dad0b28e63" : "Bearer 41d10c00f30cab3874036dbd93de44f17d9bc3e22d98b2a8fc361aab75ba3bfd"
+                        var myHeaders = new Headers();
+                        myHeaders.append("Content-Type", "application/binary");
+                        myHeaders.append("Authorization", authorization);
+                        myHeaders.append("Cookie", "__cfruid=ac5013aec99a52bd2b8af09da3ee3120b9711fb6-1622516380; _zendesk_session=BAh7CEkiD3Nlc3Npb25faWQGOgZFVEkiJTAzNDdkMmU1MTA3Y2JmMWIzOTc0MDQyOGE2NTcyYmEwBjsAVEkiDGFjY291bnQGOwBGaQMR95xJIgpyb3V0ZQY7AEZpA582Ow%3D%3D--5e799ad44877306f7c22b2ab9da3034f88c358c3");
+
+                        console.log("this is the variable", data)
+                        document.getElementById("submit-button").disabled = true;
+                        name.disabled = true;
+                        email.disabled = true;
+                        //phone.disabled = true;
+                        //country.disabled = true;
+                        //games.disabled = true;
+                        submit.disabled = true;
+
+                        
+                        var requestOptions = {
+                            method: 'POST',
+                            headers: myHeaders,
+                            body: fileBlob,
+                            redirect: 'follow'
+                        };
+
+                        // if (fileBlob.toString().length < 20) {
+                        //     data.attachmentToken = ""
+                        //     window.parent.postMessage(
+                        //         JSON.stringify({
+                        //             event_code: "ym-client-event",
+                        //             data: JSON.stringify({
+                        //                 event: {
+                        //                     code: "user-data",
+                        //                     data: {
+                        //                         userdetails: data,
+                        //                     },
+                        //                 },
+                        //             }),
+                        //         }),
+                        //         "*"
+                        //     );
+                        // }
+                        // else {
+                        const url = env == "sandbox" ? `https://codapayment1601020012.zendesk.com/api/v2/uploads?filename=user_upload` : `https://codapayment.zendesk.com/api/v2/uploads?filename=user_upload`
+                        fetch(url, requestOptions)
+                            .then(response => response.text())
+                            .then(result => {
+                                result = JSON.parse(result)
+                                console.log(result)
+                                const attachmentToken = result.upload.token
+                                data.attachmentToken = attachmentToken
+                                console.log("Data variable:", data)
+                                window.parent.postMessage(
+                                    JSON.stringify({
+                                        event_code: "ym-client-event",
+                                        data: JSON.stringify({
+                                            event: {
+                                                code: "user-data",
+                                                data: {
+                                                    userdetails: data,
+                                                },
+                                            },
+                                        }),
+                                    }),
+                                    "*"
+                                );
+                            })
+                            .catch(error => console.log('error', error));
+                    }
+                    else {
+                        name.disabled = true;
+                        email.disabled = true;
+                        //phone.disabled = true;
+                        //country.disabled = true;
+                        //games.disabled = true;
+                        submit.disabled = true;
+                        //data.attachmentToken = ""
+                        console.log(data)
+                        window.parent.postMessage(
+                            JSON.stringify({
+                                event_code: "ym-client-event",
+                                data: JSON.stringify({
+                                    event: {
+                                        code: "user-data",
+                                        data: {
+                                            userdetails: data,
+                                        },
+                                    },
+                                }),
+                            }),
+                            "*"
+                        );
+                    }
+                }
+                catch (e) {
+                    name.disabled = true;
+                    email.disabled = true;
+                    //phone.disabled = true;
+                    //country.disabled = true;
+                    //games.disabled = true;
+                    submit.disabled = true;
+                    // message.disabled = true;
+                    console.log("File not uploaded", e)
+                    data.attachmentToken = ""
+                    console.log("In catch", data)
+                    window.parent.postMessage(
+                        JSON.stringify({
+                            event_code: "ym-client-event",
+                            data: JSON.stringify({
+                                event: {
+                                    code: "user-data",
+                                    data: {
+                                        userdetails: data,
+                                    },
+                                },
+                            }),
+                        }),
+                        "*"
+                    );
+                }
+
+                // window.parent.postMessage(
+                //     JSON.stringify({
+                //         event_code: "ym-client-event",
+                //         data
+                //     }),
+                //     "*"
+                // );
+                // const { sender } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+                // self.location = `/zendesk.html?country=Indonesia&paymentType=${can["payment-type"]}&game=${can.games}&sender=${sender}`
+                // name=${can.name}&email=${can.email}&phone=${can.phone}&country=Indonesia&paymentType=${can["payment-type"]}&game=${can.games}&sender=${sender}`;
+            }
+        }
+    </script>
+    <div class="demo-wrap">
+        <div style="max-width: 600px;" class="demo-content center">
+            <img src="https://cdn.yellowmessenger.com/j4mnoorqT5BZ1620811806565.png" alt=""
+                style="float: right;max-width: 20px;max-height: 20px;margin-right: 5px;" onclick="back()">
+            <div id="selection" style="max-width: 90%;">
+                <center>
+                    <h6 id="title"
+                        style="color: black;text-align: left;margin-bottom: 25px;margin-top: 10px;font-size: 12px;">
+                        Sila isi butiran berikut untuk menghubungkan anda dengan pasukan Sokongan Pelanggan kami 😊                    </h6>
+                </center>
+            </div>
+            <p id="invalid-message" style="color:hsl(0, 100%, 50%);padding-left: 3px;font-size: 12px;"></p>
+            <div id="message"></div>
+            <h6 id="name-header">
+                Nama<sup>*</sup>
+            </h6>
+            <input type="text" placeholder="Sila masukkan nama anda" class="input-field" id="name" name="name"
+                oninput="nameHandler()" required>
+            <h6 id="email-header">
+                Email<sup>*</sup>
+            </h6>
+            <input type="email" placeholder="Sila masukkan emel anda" class="input-field" id="email" name="email"
+                oninput="emailHandler()" required>
+            <!-- <h6 id="phone-header">
+                Nomor Handphone<sup>*</sup>
+            </h6> -->
+            <!-- <input type="number" placeholder="Silakan Masukkan No.Handphone Anda" class="input-field" id="phone"
+                name="phone">
+            <h6 id="payment-header">
+                Saluran pembarayan<sup>*</sup>
+            </h6> -->
+            <!-- <select style="width: 96%;
+            max-width: 96%;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 2px;
+            border-color: #a1a1a1;
+            height: 25px;" class="center" name="country" id="country">
+                <!-- <option id="product-option" value="null" disabled selected></option>
+            </select>
+            <!-- Pilih Saluran pembarayan yang Anda inginkan -->
+            <!-- <br>
+            <h6 id="game-header">
+                Produk/Game<sup>*</sup>
+            </h6>
+            <select style="width: 96%;
+            max-width: 96%;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 2px;
+            border-color: #a1a1a1;
+            height: 25px;" class="center" name="games" id="games">
+                <option id="game-option" value="null" disabled selected></option>
+            </select> --> 
+            <!-- Silakan pilih produk/game nya -->
+            <!-- <br> -->
+            <!-- <div id="offline-message">
+            </div> --> 
+            <!-- <input type="file" id="attachment" name="filename" onchange="fileUploaded()"> -->
+            <!-- <div class="image-upload">
+                <input type="file" name="" id="logo" onchange="fileValue(this)">
+                <label for="logo" class="upload-field" id="file-label">
+                    <div class="file-thumbnail">
+                        <img id="image-preview" src="https://www.btklsby.go.id/images/placeholder/basic.png" alt="">
+                        <h3 id="filename">
+                            Drag and Drop
+                        </h3>
+                        <p>Supports JPG, PNG, SVG</p>
+                    </div>
+                </label>
+            </div> -->
+            <!-- <h6 id="attachment-header">
+                Attachments<sup>*</sup>
+            </h6>
+            <input type="file" class="form-control input-field" style="height: 30px;" id="customFile" onchange="fileUpload()"/> -->
+            <input type="button" value="Kirim" id="submit-button" onclick="submit()"
+                style="max-width: 60%;margin: 15px auto;background-color: #385072;color: #ffffff"
+                class="btn btn-primary center" />
+        </div>
+    </div>
+</body>
+
+</html>
